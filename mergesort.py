@@ -1,67 +1,73 @@
-def ASSIGNMENT(new_list, i, old_list, j):
-    new_list[i] = old_list[j]
+"""Dieses Modul implementiert den Merge-Sort-Algorithmus."""
 
-
-def mergeSort(list_to_sort_by_merge):
-    if (
-        len(list_to_sort_by_merge) > 1
-        and not len(list_to_sort_by_merge) < 1
-        and len(list_to_sort_by_merge) != 0
-    ):
-        mid = len(list_to_sort_by_merge) // 2
-        left = list_to_sort_by_merge[:mid]
-        right = list_to_sort_by_merge[mid:]
-
-        mergeSort(left)
-        mergeSort(right)
-
-        l = 0
-        r = 0
-        i = 0
-
-        while l < len(left) and r < len(right):
-            if left[l] <= right[r]:
-                ASSIGNMENT(new_list=list_to_sort_by_merge, i=i, old_list=left, j=l)
-                l += 1
-            else:
-                ASSIGNMENT(new_list=list_to_sort_by_merge, i=i, old_list=right, j=r)
-                r += 1
-            i += 1
-
-        while l < len(left):
-            list_to_sort_by_merge[i] = left[l]
-            l += 1
-            i += 1
-
-        while r < len(right):
-            list_to_sort_by_merge[i] = right[r]
-            r += 1
-            i += 1
-
-
+from typing import List
 import matplotlib.pyplot as plt
 
-original_list = [54, 26, 93, 17, 77, 31, 44, 55, 20]
-sorted_list = original_list.copy()
 
-mergeSort(sorted_list)
+def merge_sort(items: List[int]) -> None:
+    """Sortiert eine Liste von Ganzzahlen aufsteigend mittels Merge Sort."""
+    if len(items) <= 1:
+        return
 
-positions = range(len(original_list))
+    middle_index = len(items) // 2
+    left_half = items[:middle_index]
+    right_half = items[middle_index:]
 
-fig, axes = plt.subplots(1, 2, sharey=True, figsize=(10, 4))
+    merge_sort(left_half)
+    merge_sort(right_half)
 
-axes[0].bar(positions, original_list)
-axes[0].set_title("Before sorting")
-axes[0].set_xlabel("Index")
-axes[0].set_ylabel("Value")
-axes[0].set_xticks(positions)
+    left_index = 0
+    right_index = 0
+    target_index = 0
 
-axes[1].bar(positions, sorted_list)
-axes[1].set_title("After sorting")
-axes[1].set_xlabel("Index")
-axes[1].set_xticks(positions)
+    while left_index < len(left_half) and right_index < len(right_half):
+        if left_half[left_index] <= right_half[right_index]:
+            items[target_index] = left_half[left_index]
+            left_index += 1
+        else:
+            items[target_index] = right_half[right_index]
+            right_index += 1
 
-fig.suptitle("Merge Sort: List before and after sorting")
-fig.tight_layout()
+        target_index += 1
 
-plt.show()
+    while left_index < len(left_half):
+        items[target_index] = left_half[left_index]
+        left_index += 1
+        target_index += 1
+
+    while right_index < len(right_half):
+        items[target_index] = right_half[right_index]
+        right_index += 1
+        target_index += 1
+
+
+def mergeSort(items: List[int]) -> None:
+    """Kompatibilitätsfunktion für den ursprünglichen Funktionsnamen."""
+    merge_sort(items)
+
+
+if __name__ == "__main__":
+    original_list = [54, 26, 93, 17, 77, 31, 44, 55, 20]
+    sorted_list = original_list.copy()
+
+    mergeSort(sorted_list)
+
+    positions = range(len(original_list))
+
+    fig, axes = plt.subplots(1, 2, sharey=True, figsize=(10, 4))
+
+    axes[0].bar(positions, original_list)
+    axes[0].set_title("Before sorting")
+    axes[0].set_xlabel("Index")
+    axes[0].set_ylabel("Value")
+    axes[0].set_xticks(positions)
+
+    axes[1].bar(positions, sorted_list)
+    axes[1].set_title("After sorting")
+    axes[1].set_xlabel("Index")
+    axes[1].set_xticks(positions)
+
+    fig.suptitle("Merge Sort: List before and after sorting")
+    fig.tight_layout()
+
+    plt.show()
